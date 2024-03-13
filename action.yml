@@ -3,8 +3,8 @@ description: Use git rebase to push with upstream
 author: touchground
 
 inputs:
-  upstream:
-    description: <user>/<repo> or the full HTTP URL
+  repo:
+    description: Repository
     required: false
   branch:
     description: The upstream branch that is rebased on
@@ -46,6 +46,9 @@ runs:
         git config --local user.name  "$(git show -s --format='%an' HEAD)";
 
         git rebase upstream/${{ inputs.branch }};
+        
+        git add .
+        git commit -m "${{ inputs.message }}"
 
         if [ "${{ inputs.push }}" = "true" -a "$(git status | grep diverged)" ]; then
             git push origin $(git branch --show-current) --force-with-lease;
