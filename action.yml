@@ -42,7 +42,9 @@ runs:
             DEPTH=--depth=${{ inputs.depth }}
         fi;
 
-        git remote add upstream $UPSTREAM;
+        if [ ! "$(git rev-parse --abbrev-ref @{upstream})" = "$UPSTREAM" ]; then
+          git remote add upstream $UPSTREAM;
+        fi;
 
         git fetch upstream ${{ inputs.branch }} $DEPTH;
 
