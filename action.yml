@@ -1,0 +1,53 @@
+name: Rebase and push
+description: Use git rebase to push with upstream
+author: touchground
+
+inputs:
+  upstream:
+    description: <user>/<repo> or the full HTTP URL
+    required: false
+  branch:
+    description: The upstream branch that is rebased on
+    required: false
+    default:  main
+  depth:
+    description: Greater than the number of commits the upstream made in a period
+    required: false
+    default:  100
+  push:
+    description: Do the force push in this action
+    required: false
+    default:  true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        set -ex;
+
+        UPSTREAM=${{ inputs.upstream }};
+        if [ -z $UPSTREAM ]; then
+            echo ${{ github.token }} | gh auth login --with-token;
+            UPSTREAM=$(gh api repos/:owner/:repo --jq .parent.full_name);
+            if [ -z $UPSTREAM ]; then echo "Can't find upstream" >&2 && exit 1; fi;
+        fi;
+        if [ ! $(echo $UPSTREAM | egrep '^(http|git@)') ]; then
+            UPSTREAM=https://github.com/$UPSTREAM.git
+        fi;
+        if [ ${{ inputs.depth }} -ne 0 ]; then
+            DEPTH=--depth=${{ inputs.depth }}
+        fi;
+
+        git remote add upstream $UPSTREAM;
+
+        git fetch upstream ${{ inputs.branch }} $DEPTH;
+
+        git config --local user.email "$(git show -s --format='%ae' HEAD)";
+        git config --local user.name  "$(git show -s --format='%an' HEAD)";
+
+        git rebase upstream/${{ inputs.branch }};
+
+        if [ "${{ inputs.push }}" = "true" -a "$(git status | grep diverged)" ]; then
+            git push origin $(git branch --show-current) --force-with-lease;
+        fi;
+      shell: bash
