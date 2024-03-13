@@ -42,7 +42,7 @@ runs:
             DEPTH=--depth=${{ inputs.depth }}
         fi;
 
-        if [ ! "$(git rev-parse --abbrev-ref @{upstream})" = "$UPSTREAM" ]; then
+        if [ ! "$(git config --get remote.origin.url)" = "$UPSTREAM" ]; then
           git remote add upstream $UPSTREAM;
         fi;
 
