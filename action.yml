@@ -27,7 +27,7 @@ runs:
   using: composite
   steps:
     - run: |
-        set -ex;
+        set -e;
 
         UPSTREAM=${{ inputs.repo }};
         if [ -z $UPSTREAM ]; then
