@@ -52,11 +52,10 @@ runs:
         git rebase upstream/${{ inputs.branch }};
         
         git add .
-        git diff --cached --quiet
         
         git commit -m "${{ inputs.message }}"
         
-        #if [[ "${{ inputs.push }}" = "true" -a "$(git status | grep diverged)" ]]; then
+        #if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep nothing)" ]; then
         #    git push origin $(git branch --show-current) --force-with-lease;
         #fi;
       shell: bash
