@@ -42,7 +42,7 @@ runs:
             DEPTH=--depth=${{ inputs.depth }}
         fi;
 
-        git remote add upstream $UPSTREAM;
+        # git remote add upstream $UPSTREAM;
 
         git fetch upstream ${{ inputs.branch }} $DEPTH;
 
