@@ -42,7 +42,7 @@ runs:
             DEPTH=--depth=${{ inputs.depth }}
         fi;
 
-        # git remote add upstream $UPSTREAM;
+        git remote add upstream $UPSTREAM;
 
         git fetch upstream ${{ inputs.branch }} $DEPTH;
 
@@ -51,11 +51,7 @@ runs:
 
         git rebase upstream/${{ inputs.branch }};
         
-        git add .
-        
-        git commit -m "${{ inputs.message }}"
-        
-        if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep nothing)" ]; then
+        if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep diverged)" ]; then
             git push origin $(git branch --show-current) --force-with-lease;
         fi;
       shell: bash
