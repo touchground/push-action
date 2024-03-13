@@ -25,7 +25,7 @@ runs:
     - run: |
         set -ex;
 
-        UPSTREAM=${{ inputs.upstream }};
+        UPSTREAM=${{ inputs.repo }};
         if [ -z $UPSTREAM ]; then
             echo ${{ github.token }} | gh auth login --with-token;
             UPSTREAM=$(gh api repos/:owner/:repo --jq .parent.full_name);
