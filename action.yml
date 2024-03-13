@@ -36,7 +36,7 @@ runs:
             if [ -z $UPSTREAM ]; then echo "Can't find upstream" >&2 && exit 1; fi;
         fi;
         if [ ! $(echo $UPSTREAM | egrep '^(http|git@)') ]; then
-            UPSTREAM=https://github.com/$UPSTREAM.git
+            UPSTREAM=https://github.com/$UPSTREAM
         fi;
         if [ ${{ inputs.depth }} -ne 0 ]; then
             DEPTH=--depth=${{ inputs.depth }}
