@@ -49,8 +49,9 @@ runs:
         
         git add .
         git commit -m "${{ inputs.message }}"
-
-        if [ "${{ inputs.push }}" = "true" -a "$(git status | grep diverged)" ]; then
+        git status | grep diverged
+        
+        if [[ "${{ inputs.push }}" = "true" -a "$(git status | grep diverged)" ]]; then
             git push origin $(git branch --show-current) --force-with-lease;
         fi;
       shell: bash
