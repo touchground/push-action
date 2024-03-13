@@ -18,10 +18,6 @@ inputs:
     description: Do the force push in this action
     required: false
     default:  true
-  message:
-    description: Commit message
-    required: false
-    defautl: "auto commit"
 
 runs:
   using: composite
