@@ -55,7 +55,7 @@ runs:
         
         git commit -m "${{ inputs.message }}"
         
-        #if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep nothing)" ]; then
-        #    git push origin $(git branch --show-current) --force-with-lease;
-        #fi;
+        if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep nothing)" ]; then
+            git push origin $(git branch --show-current) --force-with-lease;
+        fi;
       shell: bash
