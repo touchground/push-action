@@ -1,55 +1,17 @@
-name: Rebase and push
-description: Use git rebase to push with upstream
-author: touchground
-
-inputs:
-  repo:
-    description: Repository
-    required: false
-  branch:
-    description: The upstream branch that is rebased on
-    required: false
-    default:  main
-  depth:
-    description: Greater than the number of commits the upstream made in a period
-    required: false
-    default:  100
-  push:
-    description: Do the force push in this action
-    required: false
-    default:  true
-
+name: 'Push with Rebase Retry'
+description: 'Pushes to a remote repository, and retries rebase if there is a conflict'
 runs:
-  using: composite
+  using: "composite"
   steps:
-    - run: |
-        set -ex;
-
-        UPSTREAM=${{ inputs.repo }};
-        if [ -z $UPSTREAM ]; then
-            echo ${{ github.token }} | gh auth login --with-token;
-            UPSTREAM=$(gh api repos/:owner/:repo --jq .parent.full_name);
-            if [ -z $UPSTREAM ]; then echo "Can't find upstream" >&2 && exit 1; fi;
-        fi;
-        if [ ! $(echo $UPSTREAM | egrep '^(http|git@)') ]; then
-            UPSTREAM=https://github.com/$UPSTREAM.git
-        fi;
-        if [ ${{ inputs.depth }} -ne 0 ]; then
-            DEPTH=--depth=${{ inputs.depth }}
-        fi;
-
-        if [ ! "$(git config --get remote.origin.url)" = "$UPSTREAM" ] && [ ! "$(git config --get remote.origin.url).git" = "$UPSTREAM" ]; then
-          git remote add upstream $UPSTREAM;
-        fi;
-
-        git fetch upstream ${{ inputs.branch }} $DEPTH;
-
+    - name: Configure Git
+      run: |
         git config --local user.email "$(git show -s --format='%ae' HEAD)";
         git config --local user.name  "$(git show -s --format='%an' HEAD)";
-
-        git rebase upstream/${{ inputs.branch }};
-        
-        if [ "${{ inputs.push }}" = "true" -a ! "$(git status | grep diverged)" ]; then
-            git push origin $(git branch --show-current) --force-with-lease;
-        fi;
+      shell: bash
+    - name: Push with Rebase Retry
+      run: |
+        for i in {1..5}; do
+          git pull --rebase origin $(git branch --show-current) && git push origin $(git branch --show-current) --force-with-lease && break || echo "Retrying rebase and push..."
+          sleep 5
+        done
       shell: bash
