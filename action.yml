@@ -38,7 +38,7 @@ runs:
             DEPTH=--depth=${{ inputs.depth }}
         fi;
 
-        if [ ! "$(git config --get remote.origin.url)" = "$UPSTREAM" ]; then
+        if [ ! "$(git config --get remote.origin.url)" = "$UPSTREAM" ] && [ ! "$(git config --get remote.origin.url).git" = "$UPSTREAM" ]; then
           git remote add upstream $UPSTREAM;
         fi;
 
