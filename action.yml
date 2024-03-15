@@ -1,5 +1,6 @@
-name: 'Push with Rebase Retry'
-description: 'Pushes to a remote repository, and retries rebase if there is a conflict'
+name: 'Push with Fast-Forward Pull, Merge and Rebase Fallback'
+description: 'Pushes to a remote repository, and if there is a failure, tries pull with fast-forward first before pull with merge and then rebase'
+
 runs:
   using: "composite"
   steps:
@@ -11,7 +12,20 @@ runs:
     - name: Push with Rebase Retry
       run: |
         for i in {1..5}; do
-          git pull --rebase origin $(git branch --show-current) && git push origin $(git branch --show-current) --force-with-lease && break || echo "Retrying rebase and push..."
+          git push origin $(git branch --show-current) && break || (
+            echo "Try pull fast-forward..." && 
+            git pull --ff-only origin $(git branch --show-current) || 
+            echo "Try pull merge..." && 
+            git pull --no-rebase origin $(git branch --show-current) || 
+            echo "Try pull rebase..." && 
+            git pull --rebase origin $(git branch --show-current)
+          ) && 
+          git push origin $(git branch --show-current) && break || 
+          echo "Retry loop..." && echo ""
+          if [ $i -eq 5 ]; then
+            echo "Failed to push changes to remote"
+            exit 1
+          fi
           sleep 5
         done
       shell: bash

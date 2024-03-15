@@ -1,5 +1,5 @@
-# rebase-push-action
-Basically this is doing git rebase &amp;&amp; git push
+# push-action
+Pushes to a remote repository, and if there is a failure, tries pull with fast-forward first before pull with merge and then rebase
 
 ```yaml
 on:
@@ -11,9 +11,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: touchground/rebase-push-action@main
-      with:
-        repo: '<username>/<repo>'
-        branch: 'main'
-        message: 'Rebase and push to main'
+    - uses: touchground/push-action@main
 ```
