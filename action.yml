@@ -18,6 +18,13 @@ runs:
     - name: Push with Rebase Retry
       run: |
         for i in {1..5}; do
+          # Check if GitHub rate limit is approaching
+          rate_limit=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/rate_limit | jq '.resources.core.remaining')
+          echo "GitHub rate limit remaining: $rate_limit"
+          if [ "$rate_limit" -lt 15 ]; then
+            echo "Approaching GitHub rate limit. Sleeping for 1 minute..."
+            sleep 60
+          fi
           git push origin $(git branch --show-current) && break || (
             echo "Try pull fast-forward..." && 
             git pull --ff-only origin $(git branch --show-current) || 
@@ -36,4 +43,3 @@ runs:
         done
         echo "hash=$(git rev-parse HEAD | cut -c 1-7)" >> $GITHUB_OUTPUT
       shell: bash
-
