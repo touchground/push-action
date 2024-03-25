@@ -48,9 +48,10 @@ runs:
         done
       shell: bash
 
-  - name: Output Hash
-    id: hash
-    run: |
-      commitHash=$(git rev-parse HEAD | cut -c 1-7)
-      echo "CommitHash: $commitHash"
-      echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
+    - name: Output Hash
+      id: hash
+      run: |
+        commitHash=$(git rev-parse HEAD | cut -c 1-7)
+        echo "CommitHash: $commitHash"
+        echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
+      shell: bash
