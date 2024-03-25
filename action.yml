@@ -1,10 +1,14 @@
 name: 'Push with Fast-Forward Pull, Merge and Rebase Fallback'
 description: 'Pushes to a remote repository, and if there is a failure, tries pull with fast-forward first before pull with merge and then rebase'
 
+inputs:
+  token:
+    required: false
+    default: ${{ github.token }}
 outputs:
   commitHash:
     description: 'The commit hash of the pushed commit'
-    value: ${{ steps.commit.outputs.hash }}
+    value: ${{ steps.hash.outputs.commitHash }}
 
 runs:
   using: "composite"
@@ -17,9 +21,10 @@ runs:
 
     - name: Push with Rebase Retry
       run: |
+        set -e;
         for i in {1..5}; do
           # Check if GitHub rate limit is approaching
-          rate_limit=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/rate_limit | jq '.resources.core.remaining')
+          rate_limit=$(curl -s -H "Authorization: token ${{ inputs.token }}" https://api.github.com/rate_limit | jq '.resources.core.remaining')
           echo "GitHub rate limit remaining: $rate_limit"
           if [ "$rate_limit" -lt 15 ]; then
             echo "Approaching GitHub rate limit. Sleeping for 1 minute..."
@@ -41,5 +46,11 @@ runs:
           fi
           sleep 0.2
         done
-        echo "hash=$(git rev-parse HEAD | cut -c 1-7)" >> $GITHUB_OUTPUT
       shell: bash
+
+  - name: Output Hash
+    id: hash
+    run: |
+      commitHash=$(git rev-parse HEAD | cut -c 1-7)
+      echo "CommitHash: $commitHash"
+      echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
