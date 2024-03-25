@@ -34,10 +34,6 @@ runs:
           fi
           sleep 5
         done
+        echo "hash=$(git rev-parse HEAD | cut -c 1-7)" >> $GITHUB_OUTPUT
       shell: bash
-    
-    - name: Set commit hash as output
-      id: commit
-      run: |
-        echo "commitHash=$(git rev-parse HEAD | cut -c 1-7)" >> $GITHUB_OUTPUT
-      shell: bash
+
