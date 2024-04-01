@@ -49,11 +49,14 @@ runs:
             echo "git status" &&
             git status &&
             # git pull --rebase --abort &&
-            echo "git stash" &&
+            echo "## git stash" &&
             git stash &&
             # git commit -m "Rebase to adjust same file conflict" &&
+            echo "## git pull --rebase origin $(git branch --show-current)" &&
             git pull --rebase origin $(git branch --show-current) && 
+            echo "## git stash pop" &&
             git stash pop &&
+            echo "## git push" &&
             git push origin $(git branch --show-current) && break
           ) || 
           echo "##### loop ($i)... #####" && echo ""
