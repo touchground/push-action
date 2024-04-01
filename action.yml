@@ -33,23 +33,23 @@ runs:
 
           
           git push origin $(git branch --show-current) && break || (
-            echo "Try pull fast-forward..." && 
+            echo "==> Try pull fast-forward..." && 
             git pull --ff-only origin $(git branch --show-current) && 
             # git add . &&
             # git commit -m "Commit after pull fast-forward" &&
             git push origin $(git branch --show-current) && break || 
-            # echo "Try pull merge..." && 
+            # echo "==> Try pull merge..." && 
             # git pull --no-rebase origin $(git branch --show-current) && 
             # git add . &&
             # git commit -m "Commit after pull merge" &&
             # git push origin $(git branch --show-current) && break || 
-            echo "Try pull rebase..." && 
+            echo "==> Try pull rebase..." && 
             git pull --rebase origin $(git branch --show-current) && 
             # git add . &&
             # git commit -m "Commit after pull rebase" &&
             git push origin $(git branch --show-current) && break || git rebase --skip
           ) || 
-          echo "Retry loop..." && echo ""
+          echo "##### loop ($1)... #####" && echo ""
           if [ $i -eq 5 ]; then
             echo "Failed to push changes to remote"
             exit 1
