@@ -30,31 +30,21 @@ runs:
             echo "Approaching GitHub rate limit. Sleeping for 1 minute..."
             sleep 60
           fi
-
-          
+         
           git push origin $(git branch --show-current) && break || (
             echo "==> Try pull fast-forward..." && 
             git pull --ff-only origin $(git branch --show-current) && 
-            # git add . &&
-            # git commit -m "Commit after pull fast-forward" &&
             git push origin $(git branch --show-current) && break || 
-            # echo "==> Try pull merge..." && 
-            # git pull --no-rebase origin $(git branch --show-current) && 
-            # git add . &&
-            # git commit -m "Commit after pull merge" &&
-            # git push origin $(git branch --show-current) && break || 
+            echo "==> Try pull merge..." && 
+            git pull --no-rebase origin $(git branch --show-current) && 
+            git push origin $(git branch --show-current) && break || 
             echo "==> Try pull rebase..." && 
             git pull --rebase origin $(git branch --show-current) && 
-            git rebase --skip &&
-            git pull --rebase origin $(git branch --show-current) &&
-            git add . &&
-            git commit -m "Commit after pull rebase" &&
             git push origin $(git branch --show-current) && break 
           ) || 
-          # git rebase --skip
           echo "##### loop ($i)... #####" && echo ""
           if [ $i -eq 5 ]; then
-            echo "Failed to push changes to remote"
+            echo "::error::Failed to push changes to remote"
             exit 1
           fi
           sleep 0.2
