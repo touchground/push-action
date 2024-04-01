@@ -47,8 +47,9 @@ runs:
             git pull --rebase origin $(git branch --show-current) && 
             # git add . &&
             # git commit -m "Commit after pull rebase" &&
-            git push origin $(git branch --show-current) && break || git rebase --skip
+            git push origin $(git branch --show-current) && break 
           ) || 
+          git rebase --skip
           echo "##### loop ($1)... #####" && echo ""
           if [ $i -eq 5 ]; then
             echo "Failed to push changes to remote"
