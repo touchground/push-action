@@ -47,7 +47,7 @@ runs:
             git pull --rebase origin $(git branch --show-current) && 
             # git add . &&
             # git commit -m "Commit after pull rebase" &&
-            git push origin $(git branch --show-current) && break 
+            git push origin $(git branch --show-current) && break || git rebase --skip
           ) || 
           echo "Retry loop..." && echo ""
           if [ $i -eq 5 ]; then
