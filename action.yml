@@ -46,6 +46,7 @@ runs:
             echo "==> Try pull rebase..." && 
             git pull --rebase origin $(git branch --show-current) && 
             git rebase --skip &&
+            git pull --rebase origin $(git branch --show-current) &&
             git add . &&
             git commit -m "Commit after pull rebase" &&
             git push origin $(git branch --show-current) && break 
