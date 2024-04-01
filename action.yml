@@ -52,12 +52,13 @@ runs:
             echo "## git stash" &&
             git stash &&
             git reset --hard HEAD~1 &&
+            git stash &&
             # git commit -m "Rebase to adjust same file conflict" &&
             echo "## git pull --rebase origin $(git branch --show-current)" &&
             git pull --rebase origin $(git branch --show-current) && 
             # git push origin $(git branch --show-current) && break ||
-            # echo "## git stash pop" &&
-            # git stash pop &&
+            echo "## git stash pop" &&
+            git stash pop &&
             git commit -m "Rebase to adjust same file conflict" &&
             echo "## git push" &&
             git push origin $(git branch --show-current) && break
