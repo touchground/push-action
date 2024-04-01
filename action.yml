@@ -42,10 +42,12 @@ runs:
             git pull --rebase origin $(git branch --show-current) && 
             git push origin $(git branch --show-current) && break ||  
             echo "==> unstash before rebasing..." &&
+            git status &&
             # git pull --rebase --abort &&
-            git stash pop &&
-            git commit -m "Rebase to adjust same file conflict" &&
+            git stash &&
+            # git commit -m "Rebase to adjust same file conflict" &&
             git pull --rebase origin $(git branch --show-current) && 
+            git stash pop &&
             git push origin $(git branch --show-current) && break
           ) || 
           echo "##### loop ($i)... #####" && echo ""
