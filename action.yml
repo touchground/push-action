@@ -30,15 +30,24 @@ runs:
             echo "Approaching GitHub rate limit. Sleeping for 1 minute..."
             sleep 60
           fi
+
+          # Check for unmerged files and stash them if any
+          if git ls-files --unmerged | read; then
+            echo "Stashing unmerged files..."
+            git stash
+          fi
+          
           git push origin $(git branch --show-current) && break || (
             echo "Try pull fast-forward..." && 
-            git pull --ff-only origin $(git branch --show-current) || 
+            git pull --ff-only origin $(git branch --show-current) && 
+            git push origin $(git branch --show-current) && break || 
             echo "Try pull merge..." && 
-            git pull --no-rebase origin $(git branch --show-current) || 
+            git pull --no-rebase origin $(git branch --show-current) && 
+            git push origin $(git branch --show-current) && break || 
             echo "Try pull rebase..." && 
-            git pull --rebase origin $(git branch --show-current)
-          ) && 
-          git push origin $(git branch --show-current) && break || 
+            git pull --rebase origin $(git branch --show-current) && 
+            git push origin $(git branch --show-current) && break 
+          ) || 
           echo "Retry loop..." && echo ""
           if [ $i -eq 5 ]; then
             echo "Failed to push changes to remote"
