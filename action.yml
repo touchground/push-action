@@ -46,7 +46,7 @@ runs:
             echo "::error::Failed to push changes to remote"
             exit 1
           fi
-          sleep 0.1
+          sleep 0.05
         done
       shell: bash
 
