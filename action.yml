@@ -44,22 +44,15 @@ runs:
             # git pull --rebase origin $(git branch --show-current) && 
             # git push origin $(git branch --show-current) && break ||  
             # echo "git rebase --skip" &&
-            # git rebase --skip &&
-            echo "==> unstash before rebasing..." &&
-            echo "git status" &&
-            git status &&
-            # git pull --rebase --abort &&
-            echo "" && echo "## git stash" &&
-            git stash &&
+
             echo "" && echo "## git reset" &&
-            git reset --hard HEAD~1 &&
-            git stash &&
+            git reset --hard HEAD loadtest.txt &&
             # git commit -m "Rebase to adjust same file conflict" &&
-            echo "## git pull --rebase origin $(git branch --show-current)" &&
+            echo "" && echo "## git pull --rebase origin $(git branch --show-current)" &&
             git pull --rebase origin $(git branch --show-current) && 
             # git push origin $(git branch --show-current) && break ||
             echo "## Readd" &&
-            git add . &&
+            git add loadtest.txt && git rebase --continue &&
             git commit -m "Rebase to adjust same file conflict" &&
             echo "## git push" &&
             git push origin $(git branch --show-current) && break
