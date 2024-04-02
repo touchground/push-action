@@ -41,7 +41,7 @@ runs:
             git pull --rebase origin $(git branch --show-current) && 
             git push origin $(git branch --show-current) && break 
           ) || 
-          echo "##### loop ($i++)... #####" && echo ""
+          echo "##### loop ($i)... #####" && echo ""
           if [ $i -eq 5 ]; then
             echo "::error::Failed to push changes to remote"
             exit 1
