@@ -42,7 +42,7 @@ runs:
             git pull --rebase origin $(git branch --show-current) > /dev/null 2>&1 && 
             git -c advice.pushNonFastForward=false push origin $(git branch --show-current) --quiet && break 
           } || 
-          if [ $i -eq 20 ]; then
+          if [ $i -eq 50 ]; then
             echo "::error::Failed to push changes to remote"
             exit 1
           fi
