@@ -37,11 +37,9 @@ runs:
             echo "  ==> Trying pull merge..." && 
             git pull --no-rebase origin $(git branch --show-current) && 
             git push origin $(git branch --show-current) && break || 
-            echo "git merge --abort" &&
-            git merge --abort &&
             echo "  ==> Trying pull rebase..." && 
             git pull --rebase origin $(git branch --show-current) && 
-            git push origin $(git branch --show-current) && break ||  
+            git push origin $(git branch --show-current) && break 
           ) || 
           echo "##### loop ($i++)... #####" && echo ""
           if [ $i -eq 5 ]; then
