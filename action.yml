@@ -31,7 +31,7 @@ runs:
             echo "Approaching GitHub rate limit. Sleeping for 1 minute..."
             sleep 60
           fi 
-          git push origin $(git branch --show-current) && break || (
+          git push origin $(git branch --show-current) && break || {
             echo "  ==> Trying pull fast-forward..." && 
             git pull --ff-only origin $(git branch --show-current) && 
             git push origin $(git branch --show-current) && break || 
@@ -41,7 +41,7 @@ runs:
             echo "  ==> Trying pull rebase..." && 
             git pull --rebase origin $(git branch --show-current) && 
             git push origin $(git branch --show-current) && break 
-          ) || 
+          } || 
           if [ $i -eq 5 ]; then
             echo "::error::Failed to push changes to remote"
             exit 1
