@@ -22,7 +22,7 @@ runs:
     - name: Push with Rebase Retry
       run: |
         set -e;
-        for i in {1..20}; do
+        for i in {1..50}; do
           echo " " && echo "------- Starting push loop $i -------"
           # Check if GitHub rate limit is approaching
           rate_limit=$(curl -s -H "Authorization: token ${{ inputs.token }}" https://api.github.com/rate_limit | jq '.resources.core.remaining')
@@ -46,7 +46,7 @@ runs:
             echo "::error::Failed to push changes to remote"
             exit 1
           fi
-          sleep 0.5
+          sleep 0.2
         done
       shell: bash
 
